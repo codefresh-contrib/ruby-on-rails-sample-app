@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -38,6 +37,7 @@ ActiveRecord::Schema.define(version: 20160609220802) do
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
     t.string   "password_digest"
+    t.string   "remember_token"
     t.string   "remember_digest"
     t.boolean  "admin",             default: false
     t.string   "activation_digest"
