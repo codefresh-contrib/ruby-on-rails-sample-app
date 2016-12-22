@@ -59,7 +59,7 @@ class User < ApplicationRecord
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
   end
-  
+
   # Sets the password reset attributes.
   def create_reset_digest
     self.reset_token = User.new_token
@@ -84,22 +84,22 @@ class User < ApplicationRecord
     Micropost.where("user_id IN (#{following_ids})
                      OR user_id = :user_id", user_id: id)
   end
-  
+
   # Follows a user.
   def follow(other_user)
-    active_relationships.create(followed_id: other_user.id)
+    following << other_user
   end
 
   # Unfollows a user.
   def unfollow(other_user)
-    active_relationships.find_by(followed_id: other_user.id).destroy
+    following.delete(other_user)
   end
 
   # Returns true if the current user is following the other user.
   def following?(other_user)
     following.include?(other_user)
   end
-  
+
   private
 
     # Converts email to all lower-case.
@@ -111,6 +111,6 @@ class User < ApplicationRecord
     def create_activation_digest
       self.activation_token  = User.new_token
       self.activation_digest = User.digest(activation_token)
-    end  
+    end
 end
 
