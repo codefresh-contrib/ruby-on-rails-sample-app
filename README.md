@@ -35,14 +35,6 @@ If the test suite passes, you'll be ready to run the app in a local server:
 $ rails server
 ```
 
-On Cloud9, this command should be
-
-```
-$ rails server -b $IP -p $PORT
-```
-
-instead.
-
 To check out the code for a particular chapter, use
 
 ```
