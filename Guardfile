@@ -1,4 +1,4 @@
-# Uncomment the following line on the cloud IDE.
+# Uncomment the following line on the cloud IDE. (Ignore the subsequent warning.)
 # notification :libnotify
 
 # Defines the matching rules for Guard.
