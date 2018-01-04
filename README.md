@@ -12,8 +12,8 @@ To get started with the app, clone the repo and then install the needed gems:
 
 ```
 $ cd /path/to/repos
-$ git clone https://bitbucket.org/railstutorial/sample_app_4th_ed.git sample_app
-$ cd sample_app
+$ git clone https://bitbucket.org/railstutorial/sample_app_4th_ed.git sample_app_reference
+$ cd sample_app_reference
 $ bundle install --without production
 ```
 
