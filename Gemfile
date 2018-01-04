@@ -3,9 +3,7 @@ source 'https://rubygems.org'
 gem 'rails',                   '5.1.4'
 gem 'bcrypt',                  '3.1.11'
 gem 'faker',                   '1.7.3'
-gem 'carrierwave-aws',         '1.3.0'
-gem 'fog-aws',                 '2.0.0'
-gem 'mini_magick',             '4.7.0'
+gem 'carrierwave',             '1.2.2'
 gem 'nokogiri',                '1.8.1'
 gem 'will_paginate',           '3.1.6'
 gem 'bootstrap-will_paginate', '1.0.0'
@@ -38,8 +36,10 @@ group :test do
 end
 
 group :production do
-  gem 'pg',  '0.20.0'
-  gem 'fog', '1.42'
+  gem 'pg',          '0.20.0'
+  gem 'mini_magick', '4.7.0'
+  gem 'fog',         '1.42'
+  gem 'fog-aws',     '2.0.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
