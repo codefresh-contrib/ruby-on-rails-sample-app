@@ -35,19 +35,25 @@ If the test suite passes, you'll be ready to run the app in a local server:
 $ rails server
 ```
 
-To check out the code for a particular chapter, use
-
-```
-$ git checkout chapter-branch-name
-```
-
-where you can find the branch name using
+To check out the code for a particular chapter, first find the branch nae using
 
 ```
 $ git branch -a
 ```
 
 A branch called `remotes/orgin/foo-bar` can be checked out using `git checkout foo-bar`.
+
+Next, copy the contents of the `Gemfile` and use
+
+```
+$ git checkout chapter-branch-name
+```
+
+to check out the chapter branch. Finally, copy the `Gemfile` and run
+
+```
+$ bundle update
+```
 
 For more information, see the
 [*Ruby on Rails Tutorial* book](http://www.railstutorial.org/book).
