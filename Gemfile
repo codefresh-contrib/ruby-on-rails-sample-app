@@ -15,6 +15,7 @@ gem 'coffee-rails',            '4.2.2'
 gem 'jquery-rails',            '4.3.1'
 gem 'turbolinks',              '5.0.1'
 gem 'jbuilder',                '2.7.0'
+gem 'ruby',                    '2.3.3'
 
 group :development, :test do
   gem 'sqlite3', '1.3.13'
