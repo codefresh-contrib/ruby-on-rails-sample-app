@@ -1,5 +1,11 @@
 version: '1.0'
 steps:
+  main_clone:
+    title: Cloning main repository...
+    type: git-clone
+    repo: 'codefresh-contrib/golang-sample-app'
+    revision: master
+    git: github
   BuildingDockerImage:
     title: Building Docker Image
     type: build
