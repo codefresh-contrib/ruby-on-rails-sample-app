@@ -1,4 +1,4 @@
-FROM ruby:2.3.1-slim
+FROM ruby:2.7.4-slim
 
 RUN apt-get update && \
     apt-get install -y build-essential libcurl4-openssl-dev libxml2-dev libsqlite3-dev libpq-dev nodejs postgresql-client sqlite3 --no-install-recommends && \ 
@@ -9,6 +9,7 @@ RUN apt-get update && \
 # throw errors if Gemfile has been modified since Gemfile.lock
 RUN bundle config --global frozen 1
 
+RUN gem install bundler -v 2.2.24
 
 ENV APP_PATH /usr/src/app
 
