@@ -3,21 +3,20 @@ on: [push]
 
 env:
   AWS_REGION: ap-southeast-1                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: advanceph-staging-ecr          # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: shared-advanceph.app.ecr         # set this to your Amazon ECR repository name
   ECS_SERVICE: staging-advancetechph-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: staging-advancetechph-cluster                 # set this to your Amazon ECS cluster name
 
   CONTAINER_NAME: advancetechph           # set this to the name of the container in the
                                               # containerDefinitions section of your task definition
 
-
 defaults:
   run:
     shell: bash
 
 jobs:
-  deploy:
-    name: Deploy
+  build:
+    name: Build
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -54,6 +53,21 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Download task definition
         run: |
