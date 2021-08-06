@@ -36,9 +36,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Look AWS Account ID
+      - name: Look S3
         run: |
-          aws sts get-caller-identity --query Account --output text
+          aws s3 ls
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -78,9 +78,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Look AWS Account ID
+      - name: Look S3
         run: |
-          aws sts get-caller-identity --query Account --output text
+          aws s3 ls
 
       - name: Print Image
         run: echo ${{ needs.build.outputs.image }}
