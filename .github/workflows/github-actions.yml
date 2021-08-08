@@ -66,7 +66,7 @@ jobs:
           docker tag $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:latest $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
           docker push $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
           # docker push $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:latest
-          echo "::set-output name=image::$ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG"
+          echo "::set-output name=image::${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG"
           echo $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
       - name: Sample
         id: sample
@@ -111,7 +111,7 @@ jobs:
           echo ${{ needs.build.outputs.repo }}
           echo ${{ needs.build.outputs.sample1 }}
           echo ${{ needs.build.outputs.task-def }}
-          printenv
+
       - name: Download task definition
         run: |
           aws ecs describe-task-definition --task-definition staging-advancetechph-task-family --query taskDefinition > task-definition.json
