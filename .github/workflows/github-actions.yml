@@ -62,20 +62,19 @@ jobs:
           # echo "::set-output name=image::${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG"
           echo $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
 
-  staging-check:
-    if: ${{ github.ref == 'refs/heads/master' }}
-    deploy-staging:
+
+  deploy-staging:
+    staging-check:
+      if: ${{ github.ref == 'refs/heads/master' }}
       needs: build
       name: Deploy to staging
       environment:
           name: staging
           # url: ${{ steps.deploy_staging.outputs.webapp-url }}
-
       runs-on: ubuntu-latest
       permissions:
         packages: write
         contents: read
-
       steps:
         - name: Configure AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
