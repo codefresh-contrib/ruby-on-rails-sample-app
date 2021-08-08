@@ -73,6 +73,8 @@ jobs:
         run: |
           echo "::set-output name=sample::sample123image"
           echo "::set-output name=sample1::sample321image"
+          printenv
+          export sample=example1
 
   deploy:
     needs: build
@@ -98,12 +100,19 @@ jobs:
           aws s3 ls
 
       - name: Print Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo "this is test"
+          echo "this is test "
+          echo $ECR_REGISTRY
+          echo $ECR_REPOSITORY
+          echo $IMAGE_TAG
           echo ${{ needs.build.outputs.image }}
           echo ${{ needs.build.outputs.sample }}
           echo ${{ needs.build.outputs.repo }}
           echo ${{ needs.build.outputs.sample1 }}
+          printenv
 
       - name: Download task definition
         run: |
