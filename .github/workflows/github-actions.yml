@@ -105,12 +105,12 @@ jobs:
             container-name: ${{ env.CONTAINER_NAME }}
             image: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
 
-      - name: print task def
-        id: sample
-        env: 
-          TASK_DEF: ${{ steps.task-def.outputs.task-definition }}
-        run: |
-          echo $TASK_DEF
+        - name: print task def
+          id: sample
+          env: 
+            TASK_DEF: ${{ steps.task-def.outputs.task-definition }}
+          run: |
+            echo $TASK_DEF
 
         - name: Deploy Amazon ECS task definition
           uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
