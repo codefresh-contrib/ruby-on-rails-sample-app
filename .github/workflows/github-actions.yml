@@ -110,6 +110,7 @@ jobs:
           TASK_DEF: ${{ steps.task-def.outputs.task-definition }}
         run: |
           echo $TASK_DEF
+          cat $TASK_DEF
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
