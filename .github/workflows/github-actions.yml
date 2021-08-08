@@ -65,7 +65,7 @@ jobs:
           #echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           echo "::set-output name=sample::sample123image"
       - name: Output Image name
-        id: test
+        id: images
         run: echo "::set-output name=test::hello"
 
   deploy:
