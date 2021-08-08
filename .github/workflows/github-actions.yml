@@ -107,8 +107,10 @@ jobs:
 
       - name: print task def
         id: sample
+        env: 
+          TASK_DEF: ${{ steps.task-def.outputs.task-definition }}
         run: |
-          echo ${{ steps.task-def.outputs.task-definition }}
+          echo $TASK_DEF
 
         - name: Deploy Amazon ECS task definition
           uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
