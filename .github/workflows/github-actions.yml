@@ -28,7 +28,7 @@ jobs:
       packages: write
       contents: read
     outputs:
-      image: ${{ steps.images.outputs.test }}
+      image: ${{ steps.build-image.outputs.image }}
 
     steps:
       - name: Checkout
@@ -58,15 +58,12 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           # docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          # docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          # docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          # docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           # docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          #echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          echo "::set-output name=sample::sample123image"
-      - name: Output Image name
-        id: images
-        run: echo "::set-output name=test::hello"
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          # echo "::set-output name=sample::sample123image"
 
   deploy:
     needs: build
