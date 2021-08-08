@@ -68,11 +68,19 @@ jobs:
           # docker push $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:latest
           echo "::set-output name=image::${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG"
           echo $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
+
       - name: Sample
         id: sample
         run: |
           echo "::set-output name=sample::sample123image"
           echo "::set-output name=sample1::sample321image"
+
+      - name: Step 1 - Echo out a GitHub Actions Secret to the logs
+        run: |
+          echo "The GitHub Action Secret will be masked:  "
+          echo ${{ secrets.ECR_REPOSITORY }}
+          echo "Trick to echo GitHub Actions Secret:  "
+          echo ${{secrets.ECR_REPOSITORY}} | sed 's/./& /g' 
 
   deploy:
     needs: build
