@@ -28,7 +28,7 @@ jobs:
       packages: write
       contents: read
     outputs:
-      image: ${{ steps.image.outputs.image }}
+      image: ${{ steps.image.outputs.test }}
 
     steps:
       - name: Checkout
@@ -65,8 +65,8 @@ jobs:
           #echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           echo "::set-output name=sample::sample123image"
       - name: Output Image name
-        id: image
-        run: echo "::set-output name=sample::sample123image"
+        id: test
+        run: echo "::set-output name=test::hello"
 
   deploy:
     needs: build
@@ -94,7 +94,7 @@ jobs:
       - name: Print Image
         run: |
           echo "this is test"
-          echo ${{ needs.build.outputs.sample }}
+          echo ${{ needs.build.outputs.image }}
 
       - name: Download task definition
         run: |
