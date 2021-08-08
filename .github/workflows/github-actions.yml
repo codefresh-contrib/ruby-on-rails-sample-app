@@ -247,3 +247,40 @@ jobs:
           service: ${{ secrets.ECS_SERVICE }}
           cluster: ${{ secrets.ECS_CLUSTER }}
           wait-for-service-stability: true
+
+name: Deploy to Amazon ECS DEV
+on:
+  push:
+    branches:
+      - master
+env:
+  AWS_REGION: ap-southeast-1
+  CONTAINER_NAME: advancetechph
+
+defaults:
+  run:
+    shell: bash
+jobs:
+  build:
+    name: Build
+    if: ${{ github.ref == 'refs/heads/master' }}
+    environment:
+        name: shared
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    outputs:
+      image: ${{ steps.build-image.outputs.image }}
+      registry: ${{ steps.login-ecr.outputs.registry }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Extract Git Branch
+        id: branch
+        run: |
+          echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+          echo sample
+          echo ${GITHUB_REF#refs/*/}
