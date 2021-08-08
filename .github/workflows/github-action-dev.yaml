@@ -14,7 +14,6 @@ defaults:
 jobs:
   build:
     name: Build
-    if: ${{ github.ref == 'refs/heads/feature/service1' }}
     environment:
         name: shared
     runs-on: ubuntu-latest
@@ -70,7 +69,6 @@ jobs:
 
   deploy-adhoc:
     needs: build
-    if: ${{ github.ref == 'refs/heads/feature/**' }}
     name: Deploy to adhoc
     environment:
         name: dev
