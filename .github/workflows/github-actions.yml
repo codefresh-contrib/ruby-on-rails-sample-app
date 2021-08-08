@@ -29,8 +29,6 @@ jobs:
       contents: read
     outputs:
       image: ${{ steps.build-image.outputs.image }}
-      sample: ${{ steps.sample.outputs.sample }}
-      sample1: ${{ steps.sample.outputs.sample1 }}
       repo: ${{ steps.login-ecr.outputs.registry }}
 
     steps:
@@ -66,21 +64,10 @@ jobs:
           docker tag $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:latest $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
           docker push $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
           # docker push $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:latest
-          echo "::set-output name=image::${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG"
+          # echo "::set-output name=image::${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG"
           echo $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
 
-      - name: Sample
-        id: sample
-        run: |
-          echo "::set-output name=sample::sample123image"
-          echo "::set-output name=sample1::sample321image"
-
-      - name: My first action
-        env:
-          FIRST_NAME: Mona
-          LAST_NAME: Octocat
-        run: printenv
-  deploy:
+  deploy-staging:
     needs: build
     name: Deploy to staging
     environment:
@@ -109,14 +96,10 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           echo "this is test "
-          echo $ECR_REGISTRY
+          echo ${{ secrets.ECR_REGISTRY }}
           echo $ECR_REPOSITORY
           echo $IMAGE_TAG
           echo ${{ needs.build.outputs.image }}
-          echo ${{ needs.build.outputs.sample }}
-          echo ${{ needs.build.outputs.repo }}
-          echo ${{ needs.build.outputs.sample1 }}
-          echo ${{ needs.build.outputs.task-def }}
           printenv
 
       - name: Download task definition
