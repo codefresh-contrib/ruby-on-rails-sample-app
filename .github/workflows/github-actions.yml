@@ -17,7 +17,6 @@ env:
 defaults:
   run:
     shell: bash
-
 jobs:
   build:
     name: Build
@@ -63,50 +62,58 @@ jobs:
           # echo "::set-output name=image::${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG"
           echo $ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
 
-  deploy-staging:
-    needs: build
-    name: Deploy to staging
-    environment:
-        name: staging
-        # url: ${{ steps.deploy_staging.outputs.webapp-url }}
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
+  staging-check:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    deploy-staging:
+      needs: build
+      name: Deploy to staging
+      environment:
+          name: staging
+          # url: ${{ steps.deploy_staging.outputs.webapp-url }}
 
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+      runs-on: ubuntu-latest
+      permissions:
+        packages: write
+        contents: read
 
-      - name: Print Image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
+      steps:
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ env.AWS_REGION }}
+
+        - name: Print Image
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            IMAGE_TAG: ${{ github.sha }}
+          run: |
+            echo "this is test "
+            echo ${{ needs.build.outputs.registry }}
+            echo ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
+
+        - name: Download task definition
+          run: |
+            aws ecs describe-task-definition --task-definition ${{ secrets.TASK_FAMILY }} --query taskDefinition > task-definition.json
+
+        - name: Fill in the new image ID in the Amazon ECS task definition
+          id: task-def
+          uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
+          with:
+            task-definition: task-definition.json
+            container-name: ${{ env.CONTAINER_NAME }}
+            image: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
+
+      - name: print task def
+        id: sample
         run: |
-          echo "this is test "
-          echo ${{ needs.build.outputs.registry }}
-          echo ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
+          echo ${{ steps.task-def.outputs.task-definition }}
 
-      - name: Download task definition
-        run: |
-          aws ecs describe-task-definition --task-definition ${{ secrets.TASK_FAMILY }} --query taskDefinition > task-definition.json
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
-        with:
-          task-definition: task-definition.json
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ secrets.ECS_SERVICE }}
-          cluster: ${{ secrets.ECS_CLUSTER }}
-          wait-for-service-stability: true
+        - name: Deploy Amazon ECS task definition
+          uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
+          with:
+            task-definition: ${{ steps.task-def.outputs.task-definition }}
+            service: ${{ secrets.ECS_SERVICE }}
+            cluster: ${{ secrets.ECS_CLUSTER }}
+            wait-for-service-stability: true
