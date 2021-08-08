@@ -32,6 +32,7 @@ jobs:
       sample: ${{ steps.sample.outputs.sample }}
       sample1: ${{ steps.sample.outputs.sample1 }}
       repo: ${{ steps.login-ecr.outputs.registry }}
+      task-def: ${{ steps.task-def.outputs.task-definition }}
 
     steps:
       - name: Checkout
@@ -76,6 +77,18 @@ jobs:
           printenv
           export sample=example1
 
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition staging-advancetechph-task-family --query taskDefinition > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
   deploy:
     needs: build
     name: Deploy to staging
@@ -112,8 +125,8 @@ jobs:
           echo ${{ needs.build.outputs.sample }}
           echo ${{ needs.build.outputs.repo }}
           echo ${{ needs.build.outputs.sample1 }}
+          echo ${{ needs.build.outputs.task-def }}
           printenv
-
       - name: Download task definition
         run: |
           aws ecs describe-task-definition --task-definition staging-advancetechph-task-family --query taskDefinition > task-definition.json
