@@ -33,7 +33,7 @@ jobs:
         id: branch
         run: |
           echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
-          echo sample
+          echo sample1
           echo ${GITHUB_REF#refs/*/}
 
       - name: Check branch
