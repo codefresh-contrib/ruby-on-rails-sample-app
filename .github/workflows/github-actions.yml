@@ -30,6 +30,7 @@ jobs:
     outputs:
       image: ${{ steps.build-image.outputs.image }}
       sample: ${{ steps.sample.outputs.sample }}
+      sample1: ${{ steps.sample.outputs.sample1 }}
 
     steps:
       - name: Checkout
@@ -67,7 +68,9 @@ jobs:
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       - name: Sample
         id: sample
-        run: echo "::set-output name=sample::sample123image"
+        run: |
+          echo "::set-output name=sample::sample123image"
+          echo "::set-output name=sample1::sample321image"
 
   deploy:
     needs: build
@@ -97,6 +100,7 @@ jobs:
           echo "this is test"
           echo ${{ needs.build.outputs.image }}
           echo ${{ needs.build.outputs.sample }}
+          echo ${{ needs.build.outputs.sample1 }}
 
       - name: Download task definition
         run: |
