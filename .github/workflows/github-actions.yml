@@ -29,6 +29,7 @@ jobs:
       contents: read
     outputs:
       image: ${{ steps.build-image.outputs.image }}
+      sample: ${{ steps.sample.outputs.sample }}
 
     steps:
       - name: Checkout
@@ -64,7 +65,9 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           # docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          # echo "::set-output name=sample::sample123image"
+      - name: Sample
+        id: sample
+        run: echo "::set-output name=sample::sample123image"
 
   deploy:
     needs: build
@@ -93,6 +96,7 @@ jobs:
         run: |
           echo "this is test"
           echo ${{ needs.build.outputs.image }}
+          echo ${{ needs.build.outputs.sample }}
 
       - name: Download task definition
         run: |
