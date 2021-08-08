@@ -14,7 +14,7 @@ defaults:
 jobs:
   build:
     name: Build
-    if: ${{ github.ref == 'refs/heads/feature/**' }}
+    if: ${{ github.ref == 'refs/heads/feature/*' }}
     environment:
         name: shared
     runs-on: ubuntu-latest
