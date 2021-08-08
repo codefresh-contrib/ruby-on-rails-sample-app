@@ -28,7 +28,7 @@ jobs:
       packages: write
       contents: read
     outputs:
-      image: ${{ steps.image.outputs.test }}
+      image: ${{ steps.images.outputs.test }}
 
     steps:
       - name: Checkout
