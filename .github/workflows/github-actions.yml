@@ -31,6 +31,7 @@ jobs:
       image: ${{ steps.build-image.outputs.image }}
       sample: ${{ steps.sample.outputs.sample }}
       sample1: ${{ steps.sample.outputs.sample1 }}
+      repo: ${{ steps.login-ecr.outputs.registry }}
 
     steps:
       - name: Checkout
@@ -101,6 +102,7 @@ jobs:
           echo "this is test"
           echo ${{ needs.build.outputs.image }}
           echo ${{ needs.build.outputs.sample }}
+          echo ${{ needs.build.outputs.repo }}
           echo ${{ needs.build.outputs.sample1 }}
 
       - name: Download task definition
